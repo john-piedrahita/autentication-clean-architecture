@@ -8,10 +8,15 @@
     "rootDirs": ["src", "tests"],
     "baseUrl": "src",
     "paths": {
-      "@/tests/*": ["../tests/*"],
+      "@/tests/*": ["./tests/*"],
       "@/*": ["*"]
     }
   },
   "include": ["src", "tests"],
   "exclude": []
 }
+
+//"baseUrl": "src",
+//"paths": {
+//"@services/*": ["app/core/services/*"]
+//}

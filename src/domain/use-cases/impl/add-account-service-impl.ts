@@ -18,14 +18,15 @@ export class AddAccountServiceImpl implements IAddEntityService<UserModel> {
 
         if (userExist) return false
 
+        let account = null
+
         if (!userExist) {
             const hashPassword = await this.hash.hash(data.password)
-            const account = await this.addAccountRepository.addEntityRepository(
+            account = await this.addAccountRepository.addEntityRepository(
                 { ...data, password: hashPassword }
             )
-            if (account) return account
         }
 
-        return null
+        return account
     }
 }
