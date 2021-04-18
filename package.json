@@ -4,8 +4,9 @@
   "description": "Pieza de software para el manejo de la autenticación desde lado del backend.",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon -L --watch dist --nolazy dist/src/application/server.js",
-    "start": "node dist/src/application/server.js",
+    "dev": "npm run build && nodemon -L --watch dist --nolazy ./dist/application/server.js",
+    "start": "node ./dist/src/application/server.js",
+    "build": "tsc -p tsconfig-build.json",
     "test": "jest",
     "test:ci": "npm test -- --coverage"
   },

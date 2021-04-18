@@ -1,5 +1,5 @@
 {
-  "extends": "tsconfig.json",
+  "extends": "./tsconfig.json",
   "exclude": [
     "coverage",
     "jest.config.js",
