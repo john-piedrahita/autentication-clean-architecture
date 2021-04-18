@@ -102,3 +102,12 @@ dist
 
 # TernJS port file
 .tern-port
+
+globalConfig.json
+package-lock.json
+.idea/*
+.idea
+.idea/.gitignore
+.idea/autentication-clean-architecture.iml
+.idea/modules.xml
+.idea/vcs.xml
