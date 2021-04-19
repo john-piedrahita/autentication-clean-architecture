@@ -40,13 +40,13 @@ describe("User mongo repository adapter", () => {
         const sut = makeStub()
         const addUserParams = mockAddUserParams()
         await accountCollection.insertOne(addUserParams)
-        const user = await sut.loadEntityByFieldRepository(addUserParams.email)
+        const user = await sut.checkUserRepository(addUserParams.email)
         expect(user).toBeTruthy()
     });
 
     it('should return false if check by email exist', async function () {
         const sut = makeStub()
-        const user = await sut.loadEntityByFieldRepository(faker.internet.email())
+        const user = await sut.checkUserRepository(faker.internet.email())
         expect(user).toBeFalsy()
     });
 })

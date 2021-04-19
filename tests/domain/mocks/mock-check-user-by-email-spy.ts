@@ -1,10 +1,10 @@
-import {ILoadEntityByFieldRepository} from "@/domain/models/gateways/load-entity-by-field-repository";
+import {ICheckUserByEmailRepository} from "@/domain/models/gateways/check-user-by-email-repository";
 
-export class MockCheckUserByEmailSpy implements ILoadEntityByFieldRepository {
+export class MockCheckUserByEmailSpy implements ICheckUserByEmailRepository {
     email: string
     result = false
 
-    async loadEntityByFieldRepository(field: string): Promise<boolean> {
+    async checkUserRepository(field: string): Promise<boolean> {
         this.email = field
         return this.result
     }
