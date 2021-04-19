@@ -6,6 +6,7 @@ import {UserMongoRepositoryAdapter} from "@/infrastructure/driven-adapters/adapt
 import {mockAddUserParams} from "@/tests/domain/mocks/mock-user-params";
 import faker from "faker";
 import {mockUserModel} from "@/tests/domain/mocks/mock-user-model";
+import useFakeTimers = jest.useFakeTimers;
 
 if (fs.existsSync(".env")) dotenv.config({path: ".env"});
 
@@ -40,6 +41,14 @@ describe("User mongo repository adapter", () => {
         const sut = makeStub()
         const addUserParams = mockAddUserParams()
         await accountCollection.insertOne(addUserParams)
+        const user = await sut.loadAccountByEmailRepository(addUserParams.email)
+        expect(user).toBeTruthy()
+    });
+
+    it('should return true if user when email exist', async function () {
+        const sut = makeStub()
+        const addUserParams = mockAddUserParams()
+        await accountCollection.insertOne(addUserParams)
         const user = await sut.checkUserRepository(addUserParams.email)
         expect(user).toBeTruthy()
     });
@@ -48,5 +57,26 @@ describe("User mongo repository adapter", () => {
         const sut = makeStub()
         const user = await sut.checkUserRepository(faker.internet.email())
         expect(user).toBeFalsy()
+    });
+
+    it('should update the account accessToken on success', async function () {
+        const sut = makeStub()
+        const result = await accountCollection.insertOne(mockAddUserParams())
+        const fakeAccount = result.ops[0]
+        expect(fakeAccount.accessToken).toBeFalsy()
+        const accessToken = faker.datatype.uuid()
+        await sut.updateAccessToken(fakeAccount._id, accessToken)
+        const account = await accountCollection.findOne({_id: fakeAccount._id})
+        expect(account).toBeTruthy()
+        expect(account.accessToken).toBe(accessToken)
+    });
+
+    it('should return an account on load by token', async function () {
+        const sut = makeStub()
+        const result = await accountCollection.insertOne(mockAddUserParams())
+        const { accessToken } = result.ops[0]
+        const account = await sut.loadAccountByTokenRepository(accessToken)
+        expect(account).toBeTruthy()
+        expect(account.id).toBeTruthy()
     });
 })
