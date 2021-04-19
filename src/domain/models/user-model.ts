@@ -6,3 +6,5 @@ export type UserModel = {
     avatar?: string
     createdAt: Date
 }
+
+export type AddUserParams = Omit<UserModel, 'id'>
