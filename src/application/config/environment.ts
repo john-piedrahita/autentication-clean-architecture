@@ -14,7 +14,7 @@ export const SESSION_SECRET = process.env.JWT_SECRET
 export const PORT = process.env.PORT
 export const MONGODB_URI = PROD
     ? process.env.MONGO_PRODUCTION
-    : process.env.MONGO_PRODUCTION
+    : process.env.MONGO_DEVELOPMENT
 
 if (!SESSION_SECRET) process.exit(1)
 

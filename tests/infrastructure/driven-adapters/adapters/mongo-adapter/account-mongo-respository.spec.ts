@@ -3,8 +3,9 @@ import dotenv from "dotenv";
 import {Collection} from "mongodb";
 import {MongoHelper} from "@/infrastructure/driven-adapters/helpers/mongo-helper";
 import {UserMongoRepositoryAdapter} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/user-mongo-repository-adapter";
-import {mockAddUserParams} from "../../../../domain/mocks/mock-user-params";
+import {mockAddUserParams} from "@/tests/domain/mocks/mock-user-params";
 import faker from "faker";
+import {mockUserModel} from "@/tests/domain/mocks/mock-user-model";
 
 if (fs.existsSync(".env")) dotenv.config({path: ".env"});
 
@@ -28,14 +29,14 @@ describe("User mongo repository adapter", () => {
         await accountCollection.deleteMany({})
     })
 
-    it.skip('should return an account success', async function () {
+    it('should return an account success', async function () {
         const sut = makeStub()
-        const addAccountParams = mockAddUserParams()
-        const account = await sut.addEntityRepository(addAccountParams)
-        expect(account).toBeTruthy()
+        const addAccountParams = mockUserModel()
+        const isValid = await sut.addEntityRepository(addAccountParams)
+        expect(isValid).toBeTruthy()
     })
 
-    it.skip('should return an user when email exist', async function () {
+    it('should return an user when email exist', async function () {
         const sut = makeStub()
         const addUserParams = mockAddUserParams()
         await accountCollection.insertOne(addUserParams)

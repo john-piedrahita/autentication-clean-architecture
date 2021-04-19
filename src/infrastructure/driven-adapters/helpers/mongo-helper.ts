@@ -26,13 +26,13 @@ export const MongoHelper = {
     },
 
     async loadDocumentByField(value: string, param: string, collection: string): Promise<any> {
-        await MongoHelper.mongoQueryCollection(
-            LOAD_DOCUMENT_BY_FIELD, collection, param, value
+        return await MongoHelper.mongoQueryCollection(
+            LOAD_DOCUMENT_BY_FIELD, collection, value, param
         )
     },
 
     async insertDocumentCollection(data: any, collection: string): Promise<any> {
-        await MongoHelper.mongoQueryCollection(
+        return await MongoHelper.mongoQueryCollection(
             INSERT_DOCUMENT_COLLECTION, collection, "", "", data
         )
     },
@@ -55,7 +55,7 @@ export const MongoHelper = {
                 return document && MongoHelper.map(document)
             case INSERT_DOCUMENT_COLLECTION:
                 const result = await collectionResult.insertOne(data)
-                return result && MongoHelper.map(result)
+                return result.ops[0] !== null
         }
     }
 }

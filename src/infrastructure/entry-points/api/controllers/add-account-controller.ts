@@ -1,8 +1,12 @@
 import {IController} from "@/infrastructure/entry-points/gateways/controller";
-import {HttpRequest, HttpResponse, notFound, ok, serverError, unprocessableEntity} from "@/infrastructure/helpers/http";
+import {
+    badRequest,
+    HttpRequest, HttpResponse, ok, serverError, unprocessableEntity
+} from "@/infrastructure/helpers/http";
 import {IAddEntityService} from "@/domain/use-cases/add-entity-service";
 import {AddUserParams} from "@/domain/models/user-model";
 import {fieldsValidation} from "@/infrastructure/helpers/fields-validation";
+import {EMAIL_IN_USE} from "@/infrastructure/helpers/constant";
 
 export class AddAccountController  implements IController {
     constructor(
@@ -19,7 +23,7 @@ export class AddAccountController  implements IController {
 
             const account = await this.addAccountService.addEntityService({...request.body})
 
-            if (account === null) return notFound()
+            if (!account) return badRequest(EMAIL_IN_USE)
 
             return ok(account)
 

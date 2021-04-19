@@ -1,9 +1,10 @@
 import {AddAccountServiceImpl} from "@/domain/use-cases/impl/add-account-service-impl";
-import {HashSpy} from "../../mocks/mock-cryptography";
-import {MockAddAccountRepositorySpy} from "../../mocks/mock-add-account-repository-spy";
-import {MockCheckUserByEmailSpy} from "../../mocks/mock-check-user-by-email-spy";
-import {mockUserModel} from "../../mocks/mock-user-model";
-import {throwError} from "../../mocks/mock-error";
+import {HashSpy} from "@/tests/domain/mocks/mock-cryptography";
+import {MockCheckUserByEmailSpy} from "@/tests/domain/mocks/mock-check-user-by-email-spy";
+import {MockAddAccountRepositorySpy} from "@/tests/domain/mocks/mock-add-account-repository-spy";
+import {mockUserModel} from "@/tests/domain/mocks/mock-user-model";
+import {throwError} from "@/tests/domain/mocks/mock-error";
+
 
 type SutTypes = {
     sut: AddAccountServiceImpl
@@ -31,11 +32,11 @@ const makeSut = (): SutTypes => {
 }
 
 describe("Add account use case", () => {
-    it('should return false if check user by email repository exist', async function () {
+    it('should return true if check user by email repository exist', async function () {
         const { sut, checkEmailRepositorySpy } = makeSut()
         checkEmailRepositorySpy.result = true
         const userExist = await sut.addEntityService(mockUserModel())
-        expect(userExist).toBeFalsy()
+        expect(userExist).toBe(false)
     });
 
     it('should call add account repository with correct values', async function () {

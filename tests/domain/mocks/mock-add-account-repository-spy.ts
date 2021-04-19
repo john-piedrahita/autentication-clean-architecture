@@ -1,13 +1,14 @@
 import {IAddEntityRepository} from "@/domain/models/gateways/add-entity-repository";
 import {UserModel} from "@/domain/models/user-model";
-import {mockUserModel} from "./mock-user-model";
 
 export class MockAddAccountRepositorySpy implements IAddEntityRepository<UserModel> {
     params: UserModel
-    userModel = mockUserModel()
+    result = true
 
-    async addEntityRepository(data: UserModel): Promise<UserModel> {
+    async addEntityRepository(data: UserModel): Promise<IAddEntityRepository.Result> {
         this.params = data
-        return this.userModel
+        return this.result
     }
+
+
 }

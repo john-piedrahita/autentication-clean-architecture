@@ -5,6 +5,6 @@
     "jest.config.js",
     "**/*.spec.ts",
     "**/*.test.ts",
-    "**/tests/**"
+    "**/tests"
   ]
 }

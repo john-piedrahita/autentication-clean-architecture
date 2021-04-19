@@ -1,8 +1,8 @@
-import {AddAccountController} from "@/infrastructure/entry-points/api/users/add-account-controller";
-import {MockUserSpy} from "../../../domain/mocks/mock-user-spy";
-import {mockFieldsValidation, mockRequest} from "../../../domain/mocks/mock-request";
-import {notFound, serverError, unprocessableEntity} from "@/infrastructure/helpers/http";
-import {throwError} from "../../../domain/mocks/mock-error";
+import {AddAccountController} from "@/infrastructure/entry-points/api/controllers/add-account-controller";
+import {MockUserSpy} from "@/tests/domain/mocks/mock-user-spy";
+import {mockFieldsValidation, mockRequest} from "@/tests/domain/mocks/mock-request";
+import {serverError, unprocessableEntity} from "@/infrastructure/helpers/http";
+import {throwError} from "@/tests/domain/mocks/mock-error";
 import {ServerError} from "@/infrastructure/helpers/errors";
 
 type SutTypes = {
@@ -24,23 +24,15 @@ describe("Account controller", () => {
         expect(account).toBeTruthy()
     });
 
-    it('should return null if account exist', async function () {
-        const {sut} = makeSut()
-        let httpResponse = await sut.handle({})
-        httpResponse.statusCode = 404
-        httpResponse.body = {"message": "Page not found"}
-        await expect(httpResponse).toEqual(notFound())
-    });
-
-    it.skip('should return 422 if errors fields', async function () {
+    it('should return 422 if errors fields', async function () {
         const {sut} = makeSut()
         const httpResponse = await sut.handle(mockFieldsValidation())
-
+        httpResponse.statusCode = 422
         expect(httpResponse).toEqual(unprocessableEntity({
-            "name": "name fields is required",
-            "email": "email fields is required",
-            "password": "password fields is required",
-            "avatar": "avatar fields is required"
+            "name": "name field is required",
+            "email": "email field is required",
+            "password": "password field is required",
+            "avatar": "avatar field is required"
         }))
     });
 

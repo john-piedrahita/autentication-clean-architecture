@@ -7,7 +7,7 @@ import {IAddEntityRepository} from "@/domain/models/gateways/add-entity-reposito
 export class AddAccountServiceImpl implements IAddEntityService<AddUserParams> {
     constructor(
         private readonly hash: IHash,
-        private readonly addAccountRepository: IAddEntityRepository<AddUserParams>,
+        private readonly addAccountRepository: IAddEntityRepository<boolean | AddUserParams>,
         private readonly loadUserByEmailRepository: ILoadEntityByFieldRepository
     ) {
     }
@@ -15,17 +15,14 @@ export class AddAccountServiceImpl implements IAddEntityService<AddUserParams> {
     async addEntityService(data: AddUserParams): Promise<boolean | AddUserParams> {
         const userExist = await this.loadUserByEmailRepository.loadEntityByFieldRepository(data.email)
 
-        if (userExist) return null
-
-        let account = null
+        let isValid = false
 
         if (!userExist) {
             const hashPassword = await this.hash.hash(data.password)
-            account = await this.addAccountRepository.addEntityRepository(
+            isValid = await this.addAccountRepository.addEntityRepository(
                 { ...data, password: hashPassword }
             )
         }
-
-        return account
+        return isValid
     }
 }
