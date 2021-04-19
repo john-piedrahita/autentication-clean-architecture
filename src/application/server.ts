@@ -1,5 +1,5 @@
 import 'module-alias/register'
-import {MongoHelper} from "@/infrastructure/driven-adapters/helpers/mongo-helper";
+import {MongoHelper} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/mongo-helper";
 import {MONGODB_URI, PORT} from "@/application/config/environment";
 
 MongoHelper.connect(MONGODB_URI)

@@ -1,6 +1,6 @@
 import fs from "fs";
 import dotenv from "dotenv";
-import {MongoHelper} from "@/infrastructure/driven-adapters/helpers/mongo-helper";
+import {MongoHelper} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/mongo-helper";
 
 if (fs.existsSync(".env")) dotenv.config({ path: ".env" });
 

@@ -1,6 +1,6 @@
+import {UserModel} from "@/domain/models/user-model";
 import {IUserMongoInterfacesAdapter} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/user-mongo-interfaces-adapter";
-import {AddUserParams, UserModel} from "@/domain/models/user-model";
-import {MongoHelper} from "@/infrastructure/driven-adapters/helpers/mongo-helper";
+import {MongoHelper} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/mongo-helper";
 import {EMAIL_PARAM, USERS_COLLECTION} from "@/infrastructure/helpers/constant";
 import {IAddEntityRepository} from "@/domain/models/gateways/add-entity-repository";
 
