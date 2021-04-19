@@ -15,7 +15,7 @@ export class AddAccountServiceImpl implements IAddEntityService<AddUserParams> {
     async addEntityService(data: AddUserParams): Promise<boolean | AddUserParams> {
         const userExist = await this.loadUserByEmailRepository.loadEntityByFieldRepository(data.email)
 
-        if (userExist) return false
+        if (userExist) return null
 
         let account = null
 

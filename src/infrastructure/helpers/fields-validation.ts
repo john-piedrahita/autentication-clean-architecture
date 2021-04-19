@@ -3,14 +3,11 @@ import {REGEX} from "@/infrastructure/helpers/constant";
 export function fieldsValidation(data: any) {
     let errors = {}
     for (const key in data) {
-       switch (data) {
-           case isFieldEmpty(data[key]):
-               errors[key] = `${key} field is required`
-               break
-           case key === "email" && !REGEX.test(data[key]):
-               errors[key] = `${key} is invalid`
-               break
-       }
+        if (isFieldEmpty(data[key])) {
+            errors[key] = `${key} field is required`
+        } else if (key === "email" && !REGEX.test(data[key])) {
+            errors[key] = `${key} is invalid`
+        }
     }
 
     return { errors, isValid: isFieldEmpty(errors) }

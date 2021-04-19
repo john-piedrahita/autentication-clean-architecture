@@ -19,7 +19,7 @@ export class AddAccountController  implements IController {
 
             const account = await this.addAccountService.addEntityService({...request.body})
 
-            if (account === false) return notFound()
+            if (account === null) return notFound()
 
             return ok(account)
 
