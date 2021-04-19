@@ -4,6 +4,7 @@ import {MongoHelper} from "@/infrastructure/driven-adapters/adapters/mongo-adapt
 import {EMAIL_PARAM, USERS_COLLECTION} from "@/infrastructure/helpers/constant";
 import {IAddEntityRepository} from "@/domain/models/gateways/add-entity-repository";
 import {ILoadAccountByEmailRepository} from "@/domain/models/gateways/load-account-by-email-repository";
+import {ILoadAccountByTokenRepository} from "@/domain/models/gateways/load-account-by-token-repository";
 
 export class UserMongoRepositoryAdapter implements IUserMongoInterfacesAdapter {
 
@@ -17,5 +18,21 @@ export class UserMongoRepositoryAdapter implements IUserMongoInterfacesAdapter {
 
     async loadAccountByEmailRepository(field: string): Promise<ILoadAccountByEmailRepository.Result> {
         return await MongoHelper.loadDocumentByField(field, EMAIL_PARAM, USERS_COLLECTION)
+    }
+
+    async loadAccountByTokenRepository(accessToken: string): Promise<ILoadAccountByTokenRepository.Result> {
+        return await MongoHelper.loadDocumentByField(accessToken, "accessToken", USERS_COLLECTION)
+    }
+
+    async updateAccessToken(id: string, token: string): Promise<void> {
+        const accountCollection = await MongoHelper.getCollection('users')
+        await accountCollection.updateOne({
+            _id: id
+        }, {
+            $set: {
+                accessToken: token
+            }
+        })
+
     }
 }
