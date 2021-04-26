@@ -1,4 +1,4 @@
-import {ServerError} from "@/infrastructure/helpers/errors";
+import {ServerError, UnauthorizedError} from "@/infrastructure/helpers/errors";
 import {PAGE_NOT_FOUND} from "@/infrastructure/helpers/constant";
 
 export type HttpResponse = {
@@ -14,6 +14,7 @@ export type HttpRequest = {
 
 export const ok = (data: any) => statusCodeAction(200, "", data)
 export const badRequest = (error: string) => statusCodeAction(400, error)
+export const unauthorized = () => statusCodeAction(401)
 export const notFound = () => statusCodeAction(404)
 export const unprocessableEntity = (error: any) => statusCodeAction(422, error)
 export const serverError = (error: Error)  => statusCodeAction(500, error)
@@ -25,6 +26,8 @@ function statusCodeAction (status: number, error?: any, data?: any): HttpRespons
             return { statusCode: 200, body: data }
         case 400:
             return { statusCode: 400, body: { "message" : error } }
+        case 401:
+            return { statusCode: 401, body: new UnauthorizedError() }
         case 404:
             return { statusCode: 404, body: { "message" : PAGE_NOT_FOUND } }
         case 422:

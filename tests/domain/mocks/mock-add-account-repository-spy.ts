@@ -9,6 +9,4 @@ export class MockAddAccountRepositorySpy implements IAddEntityRepository<UserMod
         this.params = data
         return this.result
     }
-
-
 }

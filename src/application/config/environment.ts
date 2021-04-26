@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 import fs from "fs"
 
 if (fs.existsSync(".env")) {
+    console.log("entro al enviroment")
     dotenv.config({ path: ".env" })
 } else {
     dotenv.config({ path: ".env.example" })

@@ -24,3 +24,23 @@ export const mockFieldsValidation = (): HttpRequest => {
         },
     }
 }
+
+export const mockRequestAuthentication = (): HttpRequest => {
+    const password = faker.internet.password()
+    return {
+        body: {
+            email: faker.internet.email(),
+            password: password,
+        }
+    }
+}
+
+export const mockFieldsValidationAuthentication = (): HttpRequest => {
+    return {
+        body: {
+            email: "",
+            password: ""
+        },
+
+    }
+}

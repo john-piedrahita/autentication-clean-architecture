@@ -5,3 +5,10 @@ export class ServerError extends Error {
         this.stack = stack
     }
 }
+
+export class UnauthorizedError extends Error {
+    constructor() {
+        super('Error en el email o la contraseña');
+        this.name = 'UnauthorizedError'
+    }
+}
