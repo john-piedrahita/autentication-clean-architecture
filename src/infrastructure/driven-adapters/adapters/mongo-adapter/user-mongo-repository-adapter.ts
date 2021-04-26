@@ -7,6 +7,7 @@ import {ILoadAccountByEmailRepository} from "@/domain/models/gateways/load-accou
 import {ILoadAccountByTokenRepository} from "@/domain/models/gateways/load-account-by-token-repository";
 
 export class UserMongoRepositoryAdapter implements IUserMongoInterfacesAdapter {
+    async resetPasswordRepository(email: string): Promise<void> {}
 
     async addEntityRepository(data: UserModel): Promise<IAddEntityRepository.Result> {
         return await MongoHelper.insertDocumentCollection(data, USERS_COLLECTION)

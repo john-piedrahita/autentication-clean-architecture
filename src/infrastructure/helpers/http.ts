@@ -13,6 +13,7 @@ export type HttpRequest = {
 }
 
 export const ok = (data: any) => statusCodeAction(200, "", data)
+export const noContent = () => statusCodeAction(204)
 export const badRequest = (error: string) => statusCodeAction(400, error)
 export const unauthorized = () => statusCodeAction(401)
 export const notFound = () => statusCodeAction(404)
@@ -24,6 +25,8 @@ function statusCodeAction (status: number, error?: any, data?: any): HttpRespons
     switch (status) {
         case 200:
             return { statusCode: 200, body: data }
+        case 204:
+            return { statusCode: 204, body: ""}
         case 400:
             return { statusCode: 400, body: { "message" : error } }
         case 401:

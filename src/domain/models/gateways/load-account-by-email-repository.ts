@@ -6,6 +6,7 @@ export namespace ILoadAccountByEmailRepository {
     export type Result = {
         id: string,
         name: string,
+        email?: string,
         password: string
     }
 }

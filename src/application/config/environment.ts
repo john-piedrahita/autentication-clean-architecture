@@ -2,7 +2,6 @@ import dotenv from "dotenv"
 import fs from "fs"
 
 if (fs.existsSync(".env")) {
-    console.log("entro al enviroment")
     dotenv.config({ path: ".env" })
 } else {
     dotenv.config({ path: ".env.example" })
@@ -27,4 +26,12 @@ if (!MONGODB_URI) {
     }
     process.exit(1);
 }
+
+export const MAIL_HOST = process.env.MAIL_HOST
+export const MAIL_PORT = process.env.MAIL_PORT
+export const MAIL_USERNAME = process.env.MAIL_USERNAME
+export const MAIL_PASSWORD = process.env.MAIL_PASSWORD
+
+export const MAIL_FROM = process.env.MAIL_FROM
+export const MAIL_SUBJECT = process.env.MAIL_SUBJECT
 
