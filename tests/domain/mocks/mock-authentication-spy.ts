@@ -1,7 +1,7 @@
 import * as faker from "faker";
-import {IUpdateAccessTokenRepository} from "@/domain/models/gateways/update-access-token-repository";
+import {IUpdateAccessTokenRepository} from "@/domain/models/gateways/update-generic-repository";
 import {IAuthenticationRepository} from "@/domain/models/gateways/authentication-repository";
-import {ILoadAccountByEmailRepository} from "@/domain/models/gateways/load-account-by-email-repository";
+import {ILoadAccountByEmailRepository} from "@/domain/models/gateways/load-generic-by-field-repository";
 
 
 export class MockLoadUserByEmailRepositorySpy implements ILoadAccountByEmailRepository {

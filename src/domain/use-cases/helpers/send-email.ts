@@ -7,6 +7,7 @@ export namespace ISendMail {
         to: string,
         from: string
         subject: string
-        body: string
+        body: string,
+        token?: string
     }
 }

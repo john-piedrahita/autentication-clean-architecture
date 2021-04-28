@@ -2,7 +2,9 @@ import {IResetPasswordService} from "@/domain/use-cases/reset-password-service";
 import {ResetPasswordServiceImpl} from "@/domain/use-cases/impl/reset-password-service-impl";
 import {UserMongoRepositoryAdapter} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/user-mongo-repository-adapter";
 import {NodemailerAdapter} from "@/infrastructure/driven-adapters/helpers/nodemailer-adapter";
-import {MAIL_HOST, MAIL_PASSWORD, MAIL_PORT, MAIL_USERNAME} from "@/application/config/environment";
+import {MAIL_HOST, MAIL_PASSWORD, MAIL_PORT, MAIL_USERNAME, SESSION_SECRET} from "@/application/config/environment";
+import {BcryptAdapter} from "@/infrastructure/driven-adapters/helpers/bcrypt-adapter";
+import {JwtAdapter} from "@/infrastructure/driven-adapters/helpers/jwt-adapter";
 
 export const makeDbResetPassword = (): IResetPasswordService => {
 
@@ -16,12 +18,15 @@ export const makeDbResetPassword = (): IResetPasswordService => {
         },
     }
 
+    const jwtAdapter = new JwtAdapter(SESSION_SECRET)
     const accountMongoRepositoryAdapter = new UserMongoRepositoryAdapter()
     const nodemailerRepositoryAdapter = new NodemailerAdapter(config)
 
     return new ResetPasswordServiceImpl(
         accountMongoRepositoryAdapter,
         accountMongoRepositoryAdapter,
-        nodemailerRepositoryAdapter
+        nodemailerRepositoryAdapter,
+        jwtAdapter,
+        accountMongoRepositoryAdapter
     )
 }

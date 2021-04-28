@@ -13,13 +13,9 @@ export class ResetPasswordController implements IController {
     async handle(request: HttpRequest): Promise<HttpResponse> {
         try {
             const {email} = request.body
-            const body = `Hi 
-                    Please click on the following link to reset your password. \n\n 
-                    If you did not request this, please ignore this email and your password will remain unchanged.\n`
-
 
             const resetPassword = await this.resetPasswordService.resetPasswordService(
-                email, MAIL_FROM, MAIL_SUBJECT, body
+                email, MAIL_FROM, MAIL_SUBJECT
             )
 
             if (resetPassword === null) return badRequest("El email no se encuetra registrado")
