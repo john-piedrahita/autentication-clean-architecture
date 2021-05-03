@@ -4,14 +4,15 @@ import {IHashCompare} from "@/domain/use-cases/helpers/hash-compare";
 import {IUpdateGenericRepository} from "@/domain/models/gateways/update-generic-repository";
 import {ILoadGenericByFieldRepository} from "@/domain/models/gateways/load-generic-by-field-repository";
 import {ACCESS_TOKEN, EMAIL_PARAM} from "@/domain/use-cases/helpers/constants";
+import {UserModel} from "@/domain/models/user-model";
 
 
 export class AuthenticationServiceImpl implements IAuthenticationRepository {
     constructor(
         private readonly encrypt: IEncrypt,
         private readonly hashCompare: IHashCompare,
-        private readonly loadGenericByFieldRepository: ILoadGenericByFieldRepository,
-        private readonly updateAccessTokenRepository: IUpdateGenericRepository
+        private readonly loadGenericByFieldRepository: ILoadGenericByFieldRepository<UserModel>,
+        private readonly updateAccessTokenRepository: IUpdateGenericRepository<UserModel>
     ) {
     }
 

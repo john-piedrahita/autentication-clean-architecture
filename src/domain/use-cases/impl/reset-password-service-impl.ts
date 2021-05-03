@@ -5,15 +5,16 @@ import {ILoadGenericByFieldRepository} from "@/domain/models/gateways/load-gener
 import {IEncrypt} from "@/domain/use-cases/helpers/encrypt";
 import {IUpdateGenericRepository} from "@/domain/models/gateways/update-generic-repository";
 import {EMAIL_PARAM, LINK_RESET_TOKEN} from "@/domain/use-cases/helpers/constants";
+import {UserModel} from "@/domain/models/user-model";
 
 export class ResetPasswordServiceImpl implements IResetPasswordService {
 
     constructor(
-        private readonly loadGenericByFieldRepository: ILoadGenericByFieldRepository,
+        private readonly loadGenericByFieldRepository: ILoadGenericByFieldRepository<UserModel>,
         private readonly resetPasswordRepository: IResetPasswordRepository,
         private readonly sendEmailRepository: ISendMail,
         private readonly encrypt: IEncrypt,
-        private readonly updateTokenRepository: IUpdateGenericRepository,
+        private readonly updateTokenRepository: IUpdateGenericRepository<UserModel>,
     ) {
     }
 

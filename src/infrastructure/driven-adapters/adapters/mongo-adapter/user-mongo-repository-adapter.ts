@@ -1,12 +1,12 @@
-import {UserModel} from "@/domain/models/user-model";
-import {IUserMongoInterfacesAdapter} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/user-mongo-interfaces-adapter";
+import {AddUserParams, UserModel} from "@/domain/models/user-model";
+import {IMongoInterfacesAdapter} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/mongo-interfaces-adapter";
 import {MongoHelper} from "@/infrastructure/driven-adapters/adapters/mongo-adapter/mongo-helper";
 import {USERS_COLLECTION} from "@/infrastructure/helpers/constant";
 import {IAddEntityRepository} from "@/domain/models/gateways/add-entity-repository";
 import {ILoadGenericByFieldRepository} from "@/domain/models/gateways/load-generic-by-field-repository";
 import {EMAIL_PARAM} from "@/domain/use-cases/helpers/constants";
 
-export class UserMongoRepositoryAdapter implements IUserMongoInterfacesAdapter {
+export class UserMongoRepositoryAdapter implements IMongoInterfacesAdapter<AddUserParams> {
 
     /**
      * This function provides us with a generic method to search for an element by any field in a collection.
@@ -14,7 +14,7 @@ export class UserMongoRepositoryAdapter implements IUserMongoInterfacesAdapter {
      * @param value
      * @return ILoadGenericByFieldRepository.Result
      */
-    async loadGenericByFieldRepository (field: string, value: string): Promise<ILoadGenericByFieldRepository.Result> {
+    async loadGenericByFieldRepository (field: string | undefined, value: string): Promise<AddUserParams> {
         return await MongoHelper.loadDocumentByFieldCollection(field, value, USERS_COLLECTION)
     }
 
@@ -28,19 +28,20 @@ export class UserMongoRepositoryAdapter implements IUserMongoInterfacesAdapter {
     /**
      * This function provides us with a generic method to insert a document into a collection.
      * @param data
+     * @param collection
      * @return IAddEntityRepository.Result
      */
-    async addEntityRepository(data: UserModel): Promise<IAddEntityRepository.Result> {
-        return await MongoHelper.insertDocumentCollection(data, USERS_COLLECTION)
+    async addEntityRepository(data: AddUserParams, collection: string): Promise<IAddEntityRepository.Result> {
+        return await MongoHelper.insertDocumentCollection(data, collection)
     }
 
     /**
      * This function provides us with a method to search for an item by email within a collection.
-     * @param field
+     * @param value
      * @return boolean
      */
-    async checkUserRepository(field: string): Promise<boolean> {
-        return await MongoHelper.loadDocumentByFieldCollection(field, EMAIL_PARAM, USERS_COLLECTION)
+    async checkUserRepository(value: string): Promise<boolean> {
+        return await MongoHelper.loadDocumentByFieldCollection(EMAIL_PARAM, value, USERS_COLLECTION)
     }
 
     /**

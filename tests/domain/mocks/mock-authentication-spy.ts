@@ -1,10 +1,13 @@
 import * as faker from "faker";
-import {IUpdateAccessTokenRepository} from "@/domain/models/gateways/update-generic-repository";
+import {IUpdateGenericRepository} from "@/domain/models/gateways/update-generic-repository";
 import {IAuthenticationRepository} from "@/domain/models/gateways/authentication-repository";
-import {ILoadAccountByEmailRepository} from "@/domain/models/gateways/load-generic-by-field-repository";
+import {
+    ILoadGenericByFieldRepository
+} from "@/domain/models/gateways/load-generic-by-field-repository";
+import {UserModel} from "@/domain/models/user-model";
 
 
-export class MockLoadUserByEmailRepositorySpy implements ILoadAccountByEmailRepository {
+export class MockLoadUserByEmailRepositorySpy implements ILoadGenericByFieldRepository<UserModel> {
     email: string
     result = {
         id: faker.datatype.uuid(),
@@ -12,20 +15,22 @@ export class MockLoadUserByEmailRepositorySpy implements ILoadAccountByEmailRepo
         password: faker.internet.password()
     }
 
-    async loadAccountByEmailRepository(field: string): Promise<ILoadAccountByEmailRepository.Result> {
-        this.email = field
+    async loadGenericByFieldRepository(field: string, value: string): Promise<UserModel> {
+        this.email = value
         return this.result
     }
 }
 
-export class MockUpdateAccessTokenRepositorySpy implements IUpdateAccessTokenRepository {
-    id: string
+export class MockUpdateAccessTokenRepositorySpy implements IUpdateGenericRepository<UserModel> {
+    id: string | number
     token: string
 
-    async updateAccessToken(id: string, token: string): Promise<void> {
+    async updateGenericRepository(id: string | number, value: string, field: string | undefined): Promise<void> {
         this.id = id
-        this.token = token
+        this.token = value
     }
+
+
 }
 
 export class MockAuthenticationSpy implements IAuthenticationRepository {

@@ -1,5 +1,5 @@
 export interface IAuthenticationRepository {
-    auth(data: IAuthenticationRepository.Params): Promise<IAuthenticationRepository.Result>
+    auth?(data: IAuthenticationRepository.Params): Promise<IAuthenticationRepository.Result>
 }
 
 export namespace IAuthenticationRepository {

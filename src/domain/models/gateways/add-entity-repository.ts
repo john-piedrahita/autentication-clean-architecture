@@ -1,5 +1,5 @@
 export interface IAddEntityRepository<T> {
-    addEntityRepository: (data: T) => Promise<IAddEntityRepository.Result>
+    addEntityRepository: (data: T, collection?: string) => Promise<IAddEntityRepository.Result>
 }
 
 export namespace IAddEntityRepository {

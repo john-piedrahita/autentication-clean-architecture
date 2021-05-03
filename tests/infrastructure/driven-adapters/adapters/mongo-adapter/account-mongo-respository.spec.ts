@@ -41,14 +41,6 @@ describe("User mongo repository adapter", () => {
         const sut = makeStub()
         const addUserParams = mockAddUserParams()
         await accountCollection.insertOne(addUserParams)
-        const user = await sut.loadAccountByEmailRepository(addUserParams.email)
-        expect(user).toBeTruthy()
-    });
-
-    it('should return true if user when email exist', async function () {
-        const sut = makeStub()
-        const addUserParams = mockAddUserParams()
-        await accountCollection.insertOne(addUserParams)
         const user = await sut.checkUserRepository(addUserParams.email)
         expect(user).toBeTruthy()
     });
@@ -65,18 +57,17 @@ describe("User mongo repository adapter", () => {
         const fakeAccount = result.ops[0]
         expect(fakeAccount.accessToken).toBeFalsy()
         const accessToken = faker.datatype.uuid()
-        await sut.updateAccessToken(fakeAccount._id, accessToken)
+        await sut.updateGenericRepository(fakeAccount._id, accessToken, "accessToken")
         const account = await accountCollection.findOne({_id: fakeAccount._id})
         expect(account).toBeTruthy()
         expect(account.accessToken).toBe(accessToken)
     });
 
-    it('should return an account on load by token', async function () {
+    it('should return an account on load by email', async function () {
         const sut = makeStub()
         const result = await accountCollection.insertOne(mockAddUserParams())
-        const { accessToken } = result.ops[0]
-        const account = await sut.loadAccountByTokenRepository(accessToken)
+        const { email } = result.ops[0]
+        const account = await sut.checkUserRepository(email)
         expect(account).toBeTruthy()
-        expect(account.id).toBeTruthy()
     });
 })

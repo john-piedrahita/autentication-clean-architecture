@@ -1,4 +1,4 @@
-import {Collection, MongoClient} from "mongodb";
+import {Collection, MongoClient, ObjectId} from "mongodb";
 import {
     INSERT_DOCUMENT_COLLECTION, LOAD_DOCUMENT_BY_FIELD_COLLECTION, UPDATE_DOCUMENT_COLLECTION,
 } from "@/infrastructure/helpers/constant";
@@ -29,12 +29,18 @@ export const MongoHelper = {
     },
 
     async loadDocumentByFieldCollection(field: string, value: string, collection: string): Promise<any> {
-        return await MongoHelper.mongoQueryCollection(LOAD_DOCUMENT_BY_FIELD_COLLECTION, collection, field, value)
+        return await MongoHelper.mongoQueryCollection(LOAD_DOCUMENT_BY_FIELD_COLLECTION, collection, "", value, field)
+    },
+
+    async loadDocumentByIdCollection(value: string | number, collection: string):Promise<any> {
+        return await MongoHelper.mongoQueryCollection(
+            'LOAD_DOCUMENT_BY_ID', collection, '', value, '', ''
+        )
     },
 
     async insertDocumentCollection(data: any, collection: string): Promise<any> {
         return await MongoHelper.mongoQueryCollection(
-            INSERT_DOCUMENT_COLLECTION, collection, "", "", data
+            INSERT_DOCUMENT_COLLECTION, collection, "", "", "", data
         )
     },
 
@@ -55,12 +61,13 @@ export const MongoHelper = {
      * @param value Field value
      * @param field Field name
      * @param data Corresponds to an object
+     * @param id
      */
     async mongoQueryCollection(
         type: string,
         collection: string,
         param?: string,
-        value?: string,
+        value?: string | number,
         field?: string,
         data?: any) {
 
@@ -68,7 +75,9 @@ export const MongoHelper = {
 
         switch (type) {
             case LOAD_DOCUMENT_BY_FIELD_COLLECTION:
-               return await this.load(param, value, collectionResult)
+               return await this.load(field, value, collectionResult)
+            case 'LOAD_DOCUMENT_BY_ID':
+                return await this.loadById(value, collectionResult)
             case INSERT_DOCUMENT_COLLECTION:
                 return await this.insert(data, collectionResult)
             case UPDATE_DOCUMENT_COLLECTION:
@@ -78,12 +87,23 @@ export const MongoHelper = {
 
     /**
      * This function provides us with the generic method to search for an element in a collection by any parameter.
-     * @param param
+     * @param field
      * @param value
      * @param collectionResult
      */
-    async load(param, value, collectionResult) {
-        this.objectFilter[param] = value
+    async load(field, value, collectionResult) {
+        this.objectFilter[field] = value
+        const document = await collectionResult.findOne(this.objectFilter)
+        return document && MongoHelper.map(document)
+    },
+
+    /**
+     * This function provides us with the methid to search for an element in collection by id.
+     * @param value
+     * @param collectionResult
+     */
+    async loadById(value: string | number, collectionResult) {
+        this.objectFilter['_id'] = new ObjectId(value)
         const document = await collectionResult.findOne(this.objectFilter)
         return document && MongoHelper.map(document)
     },
@@ -104,10 +124,15 @@ export const MongoHelper = {
      * @param value
      * @param field
      * @param collectionResult
+     * @param subDocument
      */
-    async update(param, value, field, collectionResult) {
+    async update(param, value, field, collectionResult, subDocument?: string) {
         let objectFilter = {}; objectFilter[field] = value
         let objectQuery = {}; objectQuery['$set'] = objectFilter
-        return await collectionResult.updateOne({_id: param}, objectQuery)
+
+        let objectSubDocument = {}; objectSubDocument[subDocument] = value;
+        let objectQuerySubDocument = {}; objectQuerySubDocument['$push'] = objectSubDocument
+
+        return await collectionResult.updateOne({_id: param}, objectQuery ? objectQuery : objectQuerySubDocument)
     }
 }

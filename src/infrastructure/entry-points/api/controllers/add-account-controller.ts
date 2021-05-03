@@ -1,3 +1,4 @@
+import {v4 as uuidV4} from "uuid"
 import {IController} from "@/infrastructure/entry-points/gateways/controller";
 import {
     badRequest,
@@ -6,7 +7,7 @@ import {
 import {IAddEntityService} from "@/domain/use-cases/add-entity-service";
 import {AddUserParams} from "@/domain/models/user-model";
 import {fieldsValidation} from "@/infrastructure/helpers/fields-validation";
-import {EMAIL_IN_USE} from "@/infrastructure/helpers/constant";
+import {EMAIL_IN_USE, USERS_COLLECTION} from "@/infrastructure/helpers/constant";
 
 export class AddAccountController  implements IController {
     constructor(
@@ -16,18 +17,23 @@ export class AddAccountController  implements IController {
 
     async handle(request: HttpRequest): Promise<HttpResponse> {
         try {
+            const {roles} = request.body
 
             const { errors, isValid } = fieldsValidation(request.body)
 
             if (!isValid) return unprocessableEntity(errors)
 
-            const account = await this.addAccountService.addEntityService({...request.body})
+            const account = await this.addAccountService.addEntityService({
+                ...request.body, roles, createdAt: new Date()
+                }, USERS_COLLECTION
+            )
 
             if (!account) return badRequest(EMAIL_IN_USE)
 
             return ok(account)
 
         } catch (e) {
+            console.log(e)
             return serverError(e)
         }
     }

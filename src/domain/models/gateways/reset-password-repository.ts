@@ -1,3 +1,3 @@
 export interface IResetPasswordRepository {
-    resetPasswordRepository: (email: string) => Promise<void>
+    resetPasswordRepository?: (email: string) => Promise<void>
 }

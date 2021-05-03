@@ -1,3 +1,3 @@
 export interface ICheckUserByEmailRepository {
-    checkUserRepository: (field: string) => Promise<boolean>
+    checkUserRepository?: (email: string) => Promise<boolean>
 }

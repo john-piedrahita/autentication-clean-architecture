@@ -48,7 +48,7 @@ describe("Authentication use case", () => {
 
     it('should throw if load user by email repository throws', async function () {
         const { sut, loadUserByEmailRepositorySpy} = makeSut()
-        jest.spyOn(loadUserByEmailRepositorySpy, "loadAccountByEmailRepository").mockImplementationOnce(throwError)
+        jest.spyOn(loadUserByEmailRepositorySpy, "loadGenericByFieldRepository").mockImplementationOnce(throwError)
         const promise = sut.auth(mockAuthenticationParams())
         await expect(promise).rejects.toThrow()
     });
@@ -73,18 +73,5 @@ describe("Authentication use case", () => {
         await sut.auth(authenticationParams)
         expect(hashCompareSpy.plaintext).toBe(authenticationParams.password)
         expect(hashCompareSpy.digest).toBe(loadUserByEmailRepositorySpy.result.password)
-    });
-
-    it.skip('should call Encrypt with correct ciphertext', async function () {
-        const { sut, encryptSpy, loadUserByEmailRepositorySpy } = makeSut()
-        await sut.auth(mockAuthenticationParams())
-        expect(encryptSpy.plaintext).toBe(loadUserByEmailRepositorySpy.result.id)
-    });
-
-    it.skip('should return an data on success', async function () {
-        const { sut, encryptSpy, loadUserByEmailRepositorySpy } = makeSut()
-        const { accessToken, name } = await sut.auth(mockAuthenticationParams())
-        expect(accessToken).toBe(encryptSpy.ciphertext)
-        expect(name).toBe(loadUserByEmailRepositorySpy.result.name)
     });
 })

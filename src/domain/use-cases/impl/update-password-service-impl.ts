@@ -4,14 +4,15 @@ import {IHashCompare} from "@/domain/use-cases/helpers/hash-compare";
 import {IUpdateGenericRepository} from "@/domain/models/gateways/update-generic-repository";
 import {IHash} from "@/domain/use-cases/helpers/hash";
 import {LINK_RESET_TOKEN, PASSWORD_PARAM} from "@/domain/use-cases/helpers/constants";
+import {UserModel} from "@/domain/models/user-model";
 
 export class UpdatePasswordServiceImpl implements IUpdatePasswordService {
 
     constructor(
         private readonly hash: IHash,
         private readonly hashCompare: IHashCompare,
-        private readonly updatePasswordRepository: IUpdateGenericRepository,
-        private readonly loadGenericByFieldRepository: ILoadGenericByFieldRepository,
+        private readonly updatePasswordRepository: IUpdateGenericRepository<UserModel>,
+        private readonly loadGenericByFieldRepository: ILoadGenericByFieldRepository<UserModel>,
     ) {
     }
 

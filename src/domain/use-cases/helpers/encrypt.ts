@@ -1,5 +1,5 @@
 export interface IEncrypt {
-    encrypt: (plaintext: string) => Promise<IEncrypt.Result>
+    encrypt: (plaintext: string | number) => Promise<IEncrypt.Result>
 }
 
 export namespace IEncrypt {

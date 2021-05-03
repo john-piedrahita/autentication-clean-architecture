@@ -31,8 +31,7 @@ export class EncryptSpy implements IEncrypt {
     plaintext: string
 
     async encrypt(plaintext: string): Promise<IEncrypt.Result> {
-        this.plaintext = "da8a838c-75a5-4eaf-8585-3dc3daa5ba12"
-        console.log('mock', this.plaintext)
+        this.plaintext = plaintext
         return this.ciphertext
     }
 }
