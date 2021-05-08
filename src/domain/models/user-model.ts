@@ -5,21 +5,22 @@ export type UserModel = {
     password: string
     linkReset?: string
     avatar?: string
-    roles?: RolesUserModel[]
+    role?: string
+    permissions?: ModulesPermissionsModel[]
     createdAt?: Date
 }
 
 export type AddUserParams = Omit<UserModel, 'id'>
 
-export type RolesUserModel = {
-    id?: string | number
-    name: string
-    permissions?: PermissionsRoleModel[]
+export type ModulesPermissionsModel = {
+    id: string | number
+    name?: string
+    module: string
+    moduleId: string
+    permissions?: PermissionsModel[]
 
 }
 
-export type PermissionsRoleModel = {
-    id?: string | number
-    permission: string
-    code: string | number
+export type PermissionsModel = {
+    action: string
 }

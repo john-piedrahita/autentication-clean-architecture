@@ -17,14 +17,13 @@ export class AddAccountController  implements IController {
 
     async handle(request: HttpRequest): Promise<HttpResponse> {
         try {
-            const {roles} = request.body
 
             const { errors, isValid } = fieldsValidation(request.body)
 
             if (!isValid) return unprocessableEntity(errors)
 
             const account = await this.addAccountService.addEntityService({
-                ...request.body, roles, createdAt: new Date()
+                ...request.body, createdAt: new Date()
                 }, USERS_COLLECTION
             )
 

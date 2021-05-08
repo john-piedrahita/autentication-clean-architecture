@@ -1,6 +1,6 @@
 import {Collection, MongoClient, ObjectId} from "mongodb";
 import {
-    INSERT_DOCUMENT_COLLECTION, LOAD_DOCUMENT_BY_FIELD_COLLECTION, UPDATE_DOCUMENT_COLLECTION,
+    INSERT_DOCUMENT_COLLECTION, LOAD_DOCUMENT_BY_FIELD_COLLECTION, UPDATE_DOCUMENT_COLLECTION, USERS_COLLECTION,
 } from "@/infrastructure/helpers/constant";
 
 export const MongoHelper = {
@@ -9,11 +9,11 @@ export const MongoHelper = {
     objectFilter: {},
 
     async connect(uri: string): Promise<void> {
-       this.uri = uri
-       this.client = await MongoClient.connect(uri, {
-           useNewUrlParser: true,
-           useUnifiedTopology: true
-       })
+        this.uri = uri
+        this.client = await MongoClient.connect(uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        })
     },
 
     async disconnect(): Promise<void> {
@@ -32,7 +32,7 @@ export const MongoHelper = {
         return await MongoHelper.mongoQueryCollection(LOAD_DOCUMENT_BY_FIELD_COLLECTION, collection, "", value, field)
     },
 
-    async loadDocumentByIdCollection(value: string | number, collection: string):Promise<any> {
+    async loadDocumentByIdCollection(value: string | number, collection: string): Promise<any> {
         return await MongoHelper.mongoQueryCollection(
             'LOAD_DOCUMENT_BY_ID', collection, '', value, '', ''
         )
@@ -44,13 +44,21 @@ export const MongoHelper = {
         )
     },
 
+    async insertSubDocumentCollection(documentId: string, data: [], args, collection: string): Promise<any> {
+        return await MongoHelper.addSubDocument(documentId, data, args, collection)
+    },
+
+    async deleteSubDocumentCollection(documentId, subDocumentId, document, collection): Promise<any> {
+        return MongoHelper.deleteSubDocument(documentId, subDocumentId, document, collection)
+    },
+
     async updateDocumentCollection(id: string, value: string, field: string, collection: string): Promise<void> {
         return await MongoHelper.mongoQueryCollection(UPDATE_DOCUMENT_COLLECTION, collection, id, value, field)
     },
 
     map: (data: any): any => {
-        const { _id, ...rest } = data
-        return Object.assign({}, rest, { id: _id })
+        const {_id, ...rest} = data
+        return Object.assign({}, rest, {id: _id})
     },
 
     /**
@@ -75,7 +83,7 @@ export const MongoHelper = {
 
         switch (type) {
             case LOAD_DOCUMENT_BY_FIELD_COLLECTION:
-               return await this.load(field, value, collectionResult)
+                return await this.load(field, value, collectionResult)
             case 'LOAD_DOCUMENT_BY_ID':
                 return await this.loadById(value, collectionResult)
             case INSERT_DOCUMENT_COLLECTION:
@@ -92,8 +100,9 @@ export const MongoHelper = {
      * @param collectionResult
      */
     async load(field, value, collectionResult) {
-        this.objectFilter[field] = value
-        const document = await collectionResult.findOne(this.objectFilter)
+        let objectFilter = {};
+        objectFilter[field] = value
+        const document = await collectionResult.findOne(objectFilter)
         return document && MongoHelper.map(document)
     },
 
@@ -124,15 +133,43 @@ export const MongoHelper = {
      * @param value
      * @param field
      * @param collectionResult
-     * @param subDocument
      */
-    async update(param, value, field, collectionResult, subDocument?: string) {
-        let objectFilter = {}; objectFilter[field] = value
-        let objectQuery = {}; objectQuery['$set'] = objectFilter
+    async update(param, value, field, collectionResult) {
+        let objectFilter = {};
+        objectFilter[field] = value
+        let objectQuery = {};
+        objectQuery['$set'] = objectFilter
+        return await collectionResult.updateOne({_id: param}, objectQuery)
+    },
 
-        let objectSubDocument = {}; objectSubDocument[subDocument] = value;
-        let objectQuerySubDocument = {}; objectQuerySubDocument['$push'] = objectSubDocument
+    /**
+     *
+     * @param documentId
+     * @param value
+     * @param args
+     * @param collection
+     */
+    async addSubDocument(documentId: string, value: [], args, collection) {
+        const collectionResult = await MongoHelper.getCollection(collection)
+        let objectAddDocument = {}
+        objectAddDocument[args] = value
+        let queryObjet = {'$push': objectAddDocument}
+        await collectionResult.updateOne({_id: new ObjectId(documentId)}, queryObjet)
+    },
 
-        return await collectionResult.updateOne({_id: param}, objectQuery ? objectQuery : objectQuerySubDocument)
+    /**
+     *
+     * @param documentId
+     * @param sudDocumentId
+     * @param document
+     * @param collection
+     */
+    async deleteSubDocument(documentId, sudDocumentId, document, collection) {
+        const collectionResult = await MongoHelper.getCollection(collection)
+        return await collectionResult.updateOne({_id: new ObjectId(documentId)}, {
+            $pull: {
+                roles: { moduleId: sudDocumentId }
+            }
+        })
     }
 }
