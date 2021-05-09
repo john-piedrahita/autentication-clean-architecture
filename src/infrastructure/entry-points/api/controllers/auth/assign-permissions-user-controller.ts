@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from 'uuid'
 import {IController} from "@/infrastructure/entry-points/gateways/controller";
 import {badRequest, HttpRequest, HttpResponse, noContent, serverError, unprocessableEntity} from "@/infrastructure/helpers/http";
-import {IAssignRolesToUsersService} from "@/domain/use-cases/assign-roles-to-users-service";
+import {IAssignPermissionsUsersService} from "@/domain/use-cases/assign-permissions-users-service";
 import {fieldsValidation} from "@/infrastructure/helpers/fields-validation";
 
-export class AssignRolesUserController implements IController {
+export class AssignPermissionsUserController implements IController {
 
     constructor(
-        private readonly assignRolesService: IAssignRolesToUsersService
+        private readonly assignPermissionsService: IAssignPermissionsUsersService
     ) {
     }
 
@@ -18,12 +18,12 @@ export class AssignRolesUserController implements IController {
 
             const {userId} = request.params
 
-            const { roles } = request.body
+            const { permissions } = request.body
 
-            const { id, module, permissions } = roles
+            const { id, module, permission } = permissions
 
             let action: string = ""
-            for (let item of permissions) {
+            for (let item of permission) {
                 action = item.action ? item.action : ""
                 const { errors, isValid } = fieldsValidation({ action })
                 if (!isValid) return unprocessableEntity(errors)
@@ -33,16 +33,17 @@ export class AssignRolesUserController implements IController {
 
             if (!isValid) return unprocessableEntity(errors)
 
-            const rol = await this.assignRolesService.assignRolesService(userId,
-                { moduleId: uuidv4(), ...roles }, 'roles')
+            const permissionsResult = await this.assignPermissionsService.assignPermissionService(userId,
+                { moduleId: uuidv4(), ...permissions }, 'permissions')
 
-            if (rol === null) return badRequest('El Usuario o el Rol no existen')
+            if (permissionsResult === null) return badRequest('El Usuario o los permisos no existen')
 
-            if (rol === false) return badRequest('El usuario ya tiene asignado este permiso')
+            if (permissionsResult === false) return badRequest('El usuario ya tiene asignado este permiso')
 
             return noContent()
 
         } catch (e) {
+            console.log(e)
             return serverError(e)
         }
     }

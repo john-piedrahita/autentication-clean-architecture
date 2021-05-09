@@ -1,6 +1,6 @@
 import {Collection, MongoClient, ObjectId} from "mongodb";
 import {
-    INSERT_DOCUMENT_COLLECTION, LOAD_DOCUMENT_BY_FIELD_COLLECTION, UPDATE_DOCUMENT_COLLECTION, USERS_COLLECTION,
+    INSERT_DOCUMENT_COLLECTION, LOAD_DOCUMENT_BY_FIELD_COLLECTION, UPDATE_DOCUMENT_COLLECTION
 } from "@/infrastructure/helpers/constant";
 
 export const MongoHelper = {
@@ -44,7 +44,7 @@ export const MongoHelper = {
         )
     },
 
-    async insertSubDocumentCollection(documentId: string, data: [], args, collection: string): Promise<any> {
+    async insertSubDocumentCollection(documentId: string, data: [] | string, args, collection: string): Promise<any> {
         return await MongoHelper.addSubDocument(documentId, data, args, collection)
     },
 
@@ -54,6 +54,14 @@ export const MongoHelper = {
 
     async updateDocumentCollection(id: string, value: string, field: string, collection: string): Promise<void> {
         return await MongoHelper.mongoQueryCollection(UPDATE_DOCUMENT_COLLECTION, collection, id, value, field)
+    },
+
+    async getAllDocumentsCollection(collection): Promise<any> {
+      return await MongoHelper.getAllDocument(collection)
+    },
+
+    async deleteDocumentCollection(id: string, collection: string): Promise<void> {
+        return await MongoHelper.mongoQueryCollection('DELETE_DOCUMENT_COLLECTION', collection, '', id)
     },
 
     map: (data: any): any => {
@@ -90,6 +98,8 @@ export const MongoHelper = {
                 return await this.insert(data, collectionResult)
             case UPDATE_DOCUMENT_COLLECTION:
                 return await this.update(param, value, field, collectionResult)
+            case 'DELETE_DOCUMENT_COLLECTION':
+                return await this.deleteDocument(value, collectionResult)
         }
     },
 
@@ -149,7 +159,7 @@ export const MongoHelper = {
      * @param args
      * @param collection
      */
-    async addSubDocument(documentId: string, value: [], args, collection) {
+    async addSubDocument(documentId: string, value: [] | string, args, collection) {
         const collectionResult = await MongoHelper.getCollection(collection)
         let objectAddDocument = {}
         objectAddDocument[args] = value
@@ -171,5 +181,19 @@ export const MongoHelper = {
                 roles: { moduleId: sudDocumentId }
             }
         })
+    },
+
+    async getAllDocument(collection) {
+        const collectionResult = await MongoHelper.getCollection(collection)
+        return await collectionResult.find({}).toArray()
+    },
+
+    /**
+     *
+     * @param id
+     * @param collectionResult
+     */
+    async deleteDocument(id: string, collectionResult) {
+        return await collectionResult.remove({_id: new ObjectId(id)})
     }
 }

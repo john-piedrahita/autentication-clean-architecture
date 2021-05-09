@@ -1,5 +1,5 @@
 export type UserModel = {
-    id?: string | number
+    id?: string
     name: string
     email?: string
     password: string
@@ -17,7 +17,7 @@ export type ModulesPermissionsModel = {
     name?: string
     module: string
     moduleId: string
-    permissions?: PermissionsModel[]
+    permission?: PermissionsModel[]
 
 }
 

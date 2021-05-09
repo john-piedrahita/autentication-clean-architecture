@@ -1,4 +1,4 @@
-import {AddAccountController} from "@/infrastructure/entry-points/api/controllers/add-account-controller";
+import {AddAccountController} from "@/infrastructure/entry-points/api/controllers/auth/add-account-controller";
 import {MockUserSpy} from "@/tests/domain/mocks/mock-user-spy";
 import {mockFieldsValidation, mockRequest} from "@/tests/domain/mocks/mock-request";
 import {badRequest, serverError, unauthorized, unprocessableEntity} from "@/infrastructure/helpers/http";

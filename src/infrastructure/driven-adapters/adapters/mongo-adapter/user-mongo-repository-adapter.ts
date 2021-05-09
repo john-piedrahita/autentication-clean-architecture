@@ -6,7 +6,6 @@ import {IAddEntityRepository} from "@/domain/models/gateways/add-entity-reposito
 import {ILoadGenericByFieldRepository} from "@/domain/models/gateways/load-generic-by-field-repository";
 import {EMAIL_PARAM} from "@/domain/use-cases/helpers/constants";
 import {ILoadAccountTokenRepository} from "@/domain/models/gateways/load-account-token-repository";
-import {ObjectId} from "mongodb";
 
 export class UserMongoRepositoryAdapter implements IMongoInterfacesAdapter<AddUserParams> {
 
@@ -61,11 +60,11 @@ export class UserMongoRepositoryAdapter implements IMongoInterfacesAdapter<AddUs
     /**
      * This function provides us with a generic query to update on sub document of a collection
      * @param userId
-     * @param roles
+     * @param permissions
      * @param args
      */
-    async assignRolesRepository(userId: string, roles: [], args): Promise<void> {
-        return await MongoHelper.insertSubDocumentCollection(userId, roles, args, USERS_COLLECTION)
+    async assignPermissionsRepository(userId: string, permissions: [] | string, args): Promise<void> {
+        return await MongoHelper.insertSubDocumentCollection(userId, permissions, args, USERS_COLLECTION)
     }
 
     /**
@@ -86,10 +85,10 @@ export class UserMongoRepositoryAdapter implements IMongoInterfacesAdapter<AddUs
 
     /**
      *
-     * @param roleId
+     * @param moduleId
      * @param userId
      */
-    async deleteRolesRepository(roleId: string | number, userId: string | number): Promise<void> {
-        return await MongoHelper.deleteSubDocumentCollection(userId, roleId, 'roles', USERS_COLLECTION)
+    async deletePermissionRepository(moduleId: string, userId: string): Promise<void> {
+        return await MongoHelper.deleteSubDocumentCollection(userId, moduleId, 'permissions', USERS_COLLECTION)
     }
 }

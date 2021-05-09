@@ -1,4 +1,4 @@
-import {LoginController} from "@/infrastructure/entry-points/api/controllers/login-controller";
+import {LoginController} from "@/infrastructure/entry-points/api/controllers/auth/login-controller";
 import {serverError, unauthorized, unprocessableEntity} from "@/infrastructure/helpers/http";
 import {MockAuthenticationSpy} from "@/tests/domain/mocks/mock-authentication-spy";
 import {throwError} from "@/tests/domain/mocks/mock-error";
