@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import {IController} from "@/infrastructure/entry-points/gateways/controller";
 import {
     badRequest,
@@ -33,7 +34,7 @@ export class AddModuleController implements IController {
             const {errors, isValid} = fieldsValidation({module, permission})
             if (!isValid) return unprocessableEntity(errors)
 
-            const moduleResult = await this.addModuleService.addEntityService({...request.body})
+            const moduleResult = await this.addModuleService.addEntityService({moduleId: uuidv4(), ...request.body })
 
             if (moduleResult === false) return badRequest("El Módulo al que va a asignar permisos ya existe en el sistema")
 

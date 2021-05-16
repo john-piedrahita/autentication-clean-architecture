@@ -1,3 +1,3 @@
 export interface IAssignPermissionsUsersRepository {
-    assignPermissionsRepository?: (userId: string, permissions: [] | string, ...args) => Promise<void>
+    assignPermissionsRepository?: (userId: string, permissions: any, ...args) => Promise<void>
 }

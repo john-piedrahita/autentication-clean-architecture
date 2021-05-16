@@ -1,6 +1,6 @@
 export type UserModel = {
     id?: string
-    name: string
+    fullName: string
     email?: string
     password: string
     linkReset?: string
@@ -18,7 +18,6 @@ export type ModulesPermissionsModel = {
     module: string
     moduleId: string
     permission?: PermissionsModel[]
-
 }
 
 export type PermissionsModel = {

@@ -8,25 +8,41 @@ export class AssignPermissionsUsersServiceImpl implements IAssignPermissionsUser
     constructor(
         private readonly deletePermissionModuleById: IDeletePermissionsModuleRepository,
         private readonly loadUserById: ILoadGenericByIdRepository<UserModel>,
-        private readonly loadRoleById: ILoadGenericByIdRepository<ModulesPermissionsModel>,
+        private readonly loadRoleById: ILoadGenericByIdRepository<any>,
         private readonly assignPermissionsUserRepository: IAssignPermissionsUsersRepository
     ) {
     }
 
-    async assignPermissionService(userId: string, permissions: [] | string, args): Promise<void | boolean> {
-        const moduleExit = await this.loadRoleById.loadGenericByIdRepository(permissions['id'])
-        if (!moduleExit) return null
+    async assignPermissionService(userId: string, permissions: any, args): Promise<void | boolean> {
+        let moduleExist
+        const permissionsId: string[] = [];
+
+        /**
+         * Data que llega desde el controlador
+         */
+        for (const permission of permissions) {
+            const arrayModules = []
+            permissionsId.push(permission['id'])
+            moduleExist = await this.loadRoleById.loadGenericByIdRepository(permission['id'])
+            arrayModules.push(moduleExist)
+            if (!arrayModules) return null
+        }
 
         const userExist = await this.loadUserById.loadGenericByIdRepository(userId);
         if (!userExist) return null;
 
+        /**
+         * Permisos que tiene el usuario,
+         */
         for (const permission of userExist.permissions) {
-            if (permission.id === permissions['id']) {
-                await this.deletePermissionModuleById.deletePermissionRepository(permission.moduleId, userExist.id)
+            for (const valueId of permissionsId) {
+                if (permission.id === valueId) {
+                    await this.deletePermissionModuleById.deletePermissionRepository(permission.moduleId, userExist.id)
+                }
             }
         }
 
-        if (userExist && moduleExit) {
+        if (userExist && moduleExist) {
             await this.assignPermissionsUserRepository.assignPermissionsRepository(userId, permissions, args)
         }
     }

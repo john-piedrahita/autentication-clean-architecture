@@ -25,7 +25,7 @@ export class AuthenticationServiceImpl implements IAuthenticationRepository {
                 await this.updateAccessTokenRepository.updateGenericRepository(account.id, accessToken, ACCESS_TOKEN)
                 return {
                     accessToken,
-                    name: account.name
+                    name: account.fullName
                 }
             }
         }

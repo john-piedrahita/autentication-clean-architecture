@@ -1,3 +1,3 @@
 export interface IAssignPermissionsUsersService {
-    assignPermissionService: (userId: string, permissions: [] | string, ...args) => Promise<void | boolean>
+    assignPermissionService: (userId: string, permissions: any, ...args) => Promise<void | boolean>
 }

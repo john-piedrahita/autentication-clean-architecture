@@ -159,12 +159,14 @@ export const MongoHelper = {
      * @param args
      * @param collection
      */
-    async addSubDocument(documentId: string, value: [] | string, args, collection) {
+    async addSubDocument(documentId: string, value: any, args, collection) {
         const collectionResult = await MongoHelper.getCollection(collection)
-        let objectAddDocument = {}
-        objectAddDocument[args] = value
-        let queryObjet = {'$push': objectAddDocument}
-        await collectionResult.updateOne({_id: new ObjectId(documentId)}, queryObjet)
+        for (const item of value) {
+            let objectAddDocument = {}
+            objectAddDocument[args] = item
+            let queryObjet = {'$push': objectAddDocument}
+            await collectionResult.updateOne({_id: new ObjectId(documentId)}, queryObjet)
+        }
     },
 
     /**
@@ -176,10 +178,8 @@ export const MongoHelper = {
      */
     async deleteSubDocument(documentId, sudDocumentId, document, collection) {
         const collectionResult = await MongoHelper.getCollection(collection)
-        return await collectionResult.updateOne({_id: new ObjectId(documentId)}, {
-            $pull: {
-                roles: { moduleId: sudDocumentId }
-            }
+        await collectionResult.updateOne({_id: new ObjectId(documentId)}, {
+            $unset: { permissions: ""}
         })
     },
 

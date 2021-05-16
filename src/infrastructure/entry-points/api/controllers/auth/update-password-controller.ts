@@ -34,8 +34,6 @@ export class UpdatePasswordController implements IController {
             return noContent()
 
         } catch (e) {
-
-            console.log('controller', e)
             return serverError(e)
         }
     }

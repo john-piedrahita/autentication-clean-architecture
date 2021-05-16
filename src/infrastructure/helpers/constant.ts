@@ -11,6 +11,7 @@ export const ADD_MODULE = "ADD_MODULE"
 export const ASSIGN_MODULES_USER = "ASSIGN_MODULES_USER"
 export const LOAD_ALL_MODULES = 'LOAD_ALL_MODULES'
 export const DELETE_MODULES = 'DELETE_MODULES'
+export const DETAIL_USER = 'DETAIL_USER'
 
 export const EMAIL_IN_USE = "El email ya se encuentra registrado"
 export const PAGE_NOT_FOUND = "Page not found"

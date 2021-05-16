@@ -1,5 +1,5 @@
 import {IController} from "@/infrastructure/entry-points/gateways/controller";
-import {HttpRequest, HttpResponse, noContent, serverError} from "@/infrastructure/helpers/http";
+import {badRequest, HttpRequest, HttpResponse, noContent, serverError} from "@/infrastructure/helpers/http";
 import {IDeleteModuleService} from "@/domain/use-cases/delete-module-service";
 
 export class DeleteModuleController implements IController {
@@ -13,7 +13,9 @@ export class DeleteModuleController implements IController {
         try {
             const {moduleId} = request.params
 
-            await this.deleteModuleService.deleteModuleService(moduleId)
+            const module = await this.deleteModuleService.deleteModuleService(moduleId)
+
+            if (module === null) return badRequest('El módulo que intenta eliminar no existe')
 
             return noContent()
 

@@ -63,7 +63,7 @@ export class UserMongoRepositoryAdapter implements IMongoInterfacesAdapter<AddUs
      * @param permissions
      * @param args
      */
-    async assignPermissionsRepository(userId: string, permissions: [] | string, args): Promise<void> {
+    async assignPermissionsRepository(userId: string, permissions: any, args): Promise<void> {
         return await MongoHelper.insertSubDocumentCollection(userId, permissions, args, USERS_COLLECTION)
     }
 

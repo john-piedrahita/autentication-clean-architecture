@@ -22,23 +22,31 @@ export const deleteUserPermissions = (req: Request, res: Response, next: NextFun
  * @param res
  * @param next
  */
-function permission(moduleType: string, action: string, req: Request, res: Response, next: NextFunction) {
+async function permission(moduleType: string, action: string, req: Request, res: Response, next: NextFunction) {
+
     try {
-        if (req['permissions'][0] === undefined) return res.status(401).json({message: 'Unauthorized'})
 
-        const permissions = req['permissions'][0].permission
-        const module = req['permissions'][0].module
+        if (typeof req['role'] === "string" && req['role'] === 'ADMIN'){
+            next()
+            return
+        } else {
+            if (req['permissions'][0] === undefined)
+                return res.status(401).json({message: 'Unauthorized'})
 
-        for (const permission of permissions) {
-            if (module === moduleType && permission.action === action) {
-                next()
-                return
+            const permissions = req['permissions'][0].permission
+            const module = req['permissions'][0].module
+
+            for (const permission of permissions) {
+                if (module === moduleType && permission.action === action) {
+                    next()
+                    return
+                }
             }
         }
+
         return res.status(401).json({message: 'Unauthorized'})
     } catch (e) {
         return serverError(e)
     }
 
 }
-

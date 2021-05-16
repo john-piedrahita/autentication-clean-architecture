@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
+
 import {IController} from "@/infrastructure/entry-points/gateways/controller";
 import {badRequest, HttpRequest, HttpResponse, noContent, serverError, unprocessableEntity} from "@/infrastructure/helpers/http";
 import {IAssignPermissionsUsersService} from "@/domain/use-cases/assign-permissions-users-service";
@@ -18,23 +18,26 @@ export class AssignPermissionsUserController implements IController {
 
             const {userId} = request.params
 
-            const { permissions } = request.body
-
-            const { id, module, permission } = permissions
+            const { permissions, email, fullName } = request.body
 
             let action: string = ""
-            for (let item of permission) {
-                action = item.action ? item.action : ""
-                const { errors, isValid } = fieldsValidation({ action })
+
+            for (const value of permissions) {
+                const { errors, isValid } = fieldsValidation({ id: value.id, module: value.module })
                 if (!isValid) return unprocessableEntity(errors)
+                for (let item of value.permission) {
+                    action = item.action ? item.action : ""
+                    const { errors, isValid } = fieldsValidation({ action })
+                    if (!isValid) return unprocessableEntity(errors)
+                }
             }
 
-            const { errors, isValid } = fieldsValidation({ id, module, permissions })
+            const { errors, isValid } = fieldsValidation({ permissions, email, fullName })
 
             if (!isValid) return unprocessableEntity(errors)
 
             const permissionsResult = await this.assignPermissionsService.assignPermissionService(userId,
-                { moduleId: uuidv4(), ...permissions }, 'permissions')
+                permissions, 'permissions')
 
             if (permissionsResult === null) return badRequest('El Usuario o los permisos no existen')
 
@@ -43,7 +46,6 @@ export class AssignPermissionsUserController implements IController {
             return noContent()
 
         } catch (e) {
-            console.log(e)
             return serverError(e)
         }
     }

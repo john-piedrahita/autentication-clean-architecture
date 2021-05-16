@@ -5,7 +5,7 @@ export const authMiddlewareAdapter = (middleware: IMiddleware<any>) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (!req.headers.authorization) {
-                return res.json({message: "No token provided"})
+                return res.status(400).json({message: "No token provided"})
             }
 
             let accessToken: string = req.headers.authorization.split(" ")[1]

@@ -1,7 +1,7 @@
 import {
     ADD_ACCOUNT,
     ADD_MODULE,
-    ASSIGN_MODULES_USER, DELETE_MODULES, LOAD_ALL_MODULES,
+    ASSIGN_MODULES_USER, DELETE_MODULES, DETAIL_USER, LOAD_ALL_MODULES,
     LOGIN,
     RESET_PASSWORD,
     UPDATE_PASSWORD
@@ -23,6 +23,8 @@ import {LoadAllModulesController} from "@/infrastructure/entry-points/api/contro
 import {makeDbLoadAllModulesFactory} from "@/infrastructure/driven-adapters/factories/db-load-all-modules-factory";
 import {DeleteModuleController} from "@/infrastructure/entry-points/api/controllers/modules/delete-module-controller";
 import {makeDbDeleteModuleFactory} from "@/infrastructure/driven-adapters/factories/db-update-module-factory";
+import {LoadUserByIdController} from "@/infrastructure/entry-points/api/controllers/users/load-user-by-id-controller";
+import {makeDbLoadUserByIdFactory} from "@/infrastructure/driven-adapters/factories/db-load-user-by-id-factory";
 
 export const makeBaseControllerFactory = (type: string): IController => {
     switch (type) {
@@ -42,5 +44,7 @@ export const makeBaseControllerFactory = (type: string): IController => {
             return new LoadAllModulesController(makeDbLoadAllModulesFactory())
         case DELETE_MODULES:
             return new DeleteModuleController(makeDbDeleteModuleFactory())
+        case DETAIL_USER:
+            return new LoadUserByIdController(makeDbLoadUserByIdFactory())
     }
 }
