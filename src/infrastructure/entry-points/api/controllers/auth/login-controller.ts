@@ -31,5 +31,4 @@ export class LoginController implements IController {
             return serverError(e)
         }
     }
-
 }

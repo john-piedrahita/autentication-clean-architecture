@@ -11,7 +11,7 @@ export class MockLoadUserByEmailRepositorySpy implements ILoadGenericByFieldRepo
     email: string
     result = {
         id: faker.datatype.uuid(),
-        name: faker.name.findName(),
+        fullName: faker.name.findName(),
         password: faker.internet.password()
     }
 

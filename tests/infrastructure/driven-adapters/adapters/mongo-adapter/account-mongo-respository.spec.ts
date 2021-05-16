@@ -33,7 +33,7 @@ describe("User mongo repository adapter", () => {
     it('should return an account success', async function () {
         const sut = makeStub()
         const addAccountParams = mockUserModel()
-        const isValid = await sut.addEntityRepository(addAccountParams)
+        const isValid = await sut.addEntityRepository(addAccountParams, 'users')
         expect(isValid).toBeTruthy()
     })
 

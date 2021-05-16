@@ -3,7 +3,7 @@ import {UserModel} from "@/domain/models/user-model";
 
 export const mockUserModel = (): UserModel => ({
     id: faker.datatype.uuid(),
-    name: faker.name.findName(),
+    fullName: faker.name.findName(),
     email: faker.internet.email(),
     password: faker.random.word(),
     avatar: faker.internet.avatar(),
